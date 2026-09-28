@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Access Denied')}"></head>
+<body>
+    <div class="app-container" style="justify-content: center; align-items: center; flex-direction: column;">
+        <h1 style="font-size: 4rem; color: var(--status-error);">403</h1>
+        <h2 class="mb-3">Access Denied</h2>
+        <p class="mb-4">You don't have permission to access this page.</p>
+        <a th:href="@{/login}" class="btn btn-primary">Return to Login</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+graph TD
+    Client["Client (Browser / API)"]
+    
+    subgraph Spring Security
+        JwtFilter["JWT Authentication Filter"]
+        RoleAuth["Role Authorization (CUSTOMER / LOAN_OFFICER)"]
+    end
+    
+    subgraph REST Controllers
+        AuthController["Auth Controller"]
+        CustomerController["Customer Controller"]
+        LoanController["Loan Application Controller"]
+        EligibilityController["Eligibility Controller"]
+        OfficerController["Loan Officer Controller"]
+    end
+    
+    subgraph Service Layer
+        AuthService["Auth & Security Services"]
+        CustomerService["Customer Service"]
+        LoanService["Loan Application Service"]
+        EligibilityService["Eligibility Engine"]
+        OfficerService["Loan Officer Workflow"]
+        NotificationService["Notification Service"]
+    end
+    
+    subgraph Repository Layer
+        UserRepository["User Repository"]
+        CustomerRepository["Customer Repository"]
+        LoanRepository["Loan Application Repository"]
+        EvalRepository["Eligibility Evaluation Repository"]
+        NotificationRepository["Notification Repository"]
+    end
+    
+    Database[(MySQL Database)]
+    
+    Client -->|HTTP Request| JwtFilter
+    JwtFilter --> RoleAuth
+    RoleAuth --> AuthController
+    RoleAuth --> CustomerController
+    RoleAuth --> LoanController
+    RoleAuth --> EligibilityController
+    RoleAuth --> OfficerController
+    
+    AuthController --> AuthService
+    CustomerController --> CustomerService
+    LoanController --> LoanService
+    EligibilityController --> EligibilityService
+    OfficerController --> OfficerService
+    
+    AuthService --> UserRepository
+    CustomerService --> CustomerRepository
+    LoanService --> LoanRepository
+    EligibilityService --> EvalRepository
+    EligibilityService --> CustomerRepository
+    OfficerService --> LoanRepository
+    OfficerService --> NotificationService
+    NotificationService --> NotificationRepository
+    
+    UserRepository --> Database
+    CustomerRepository --> Database
+    LoanRepository --> Database
+    EvalRepository --> Database
+    NotificationRepository --> Database

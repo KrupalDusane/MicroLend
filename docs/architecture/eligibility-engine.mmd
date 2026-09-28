@@ -1,0 +1,21 @@
+graph TD
+    Start[Customer triggers Evaluation] --> FetchProfile[Fetch Customer Monthly Income & Obligations]
+    FetchProfile --> Rule1{Rule 1: Income >= ₹15,000?}
+    
+    Rule1 -- Yes --> Rule2{Rule 2: LTI <= 5.0?}
+    Rule1 -- No --> Fail[Mark NOT_ELIGIBLE]
+    
+    Rule2 -- Yes --> Rule3{Rule 3: DTI <= 0.50?}
+    Rule2 -- No --> Fail
+    
+    Rule3 -- Yes --> Rule4{Rule 4: Tenure 6-60 Months?}
+    Rule3 -- No --> Fail
+    
+    Rule4 -- Yes --> Pass[Mark ELIGIBLE]
+    Rule4 -- No --> Fail
+    
+    Fail --> CalcEMI[Calculate Estimated EMI]
+    Pass --> CalcEMI
+    
+    CalcEMI --> Save[Save EligibilityEvaluation to DB]
+    Save --> Return[Return Response to Customer]

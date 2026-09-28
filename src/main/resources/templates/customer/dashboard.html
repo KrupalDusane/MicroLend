@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Customer Dashboard')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: customerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <h1 class="mb-4">Welcome back, Customer!</h1>
+                <div th:replace="~{fragments/common :: alerts}"></div>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <span class="stat-title">Active Loans</span>
+                        <span class="stat-value">2</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Outstanding Amount</span>
+                        <span class="stat-value">₹45,000.00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Next EMI</span>
+                        <span class="stat-value">₹5,000.00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Next Due Date</span>
+                        <span class="stat-value">Oct 15, 2026</span>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid var(--status-error);">
+                        <span class="stat-title">Overdue Amount</span>
+                        <span class="stat-value text-danger">₹0.00</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="card-title mb-0">Recent Activity</h2>
+                        <a th:href="@{/customer/loans}" class="btn btn-secondary">View All Loans</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Loan ID</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ML-2026-001</td>
+                                    <td>₹50,000.00</td>
+                                    <td><span class="badge badge-approved">APPROVED</span></td>
+                                    <td>Sep 10, 2026</td>
+                                </tr>
+                                <tr>
+                                    <td>ML-2026-002</td>
+                                    <td>₹15,000.00</td>
+                                    <td><span class="badge badge-review">UNDER_REVIEW</span></td>
+                                    <td>Sep 12, 2026</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/customer.js}"></script>
+</body>
+</html>

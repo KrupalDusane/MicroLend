@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="alerts">
+        <!-- Generic Alert Placeholders -->
+        <div class="alert alert-success alert-dismissible" style="display: none;">
+            <span>Success! Operation completed successfully.</span>
+            <span class="close" style="float: right; cursor: pointer;">&times;</span>
+        </div>
+        <div class="alert alert-error alert-dismissible" style="display: none;">
+            <span>Error! Something went wrong.</span>
+            <span class="close" style="float: right; cursor: pointer;">&times;</span>
+        </div>
+    </div>
+    
+    <!-- Loan Lifecycle Stepper Fragment -->
+    <div th:fragment="loanLifecycle(status)">
+        <div class="stepper">
+            <div class="step" th:classappend="${status == 'DRAFT' ? 'active' : 'completed'}">
+                <div class="step-circle">1</div>
+                <div class="step-label">DRAFT</div>
+            </div>
+            <div class="step" th:classappend="${status == 'SUBMITTED' ? 'active' : (status == 'UNDER_REVIEW' or status == 'APPROVED' or status == 'REJECTED' or status == 'CLOSED' ? 'completed' : '')}">
+                <div class="step-circle">2</div>
+                <div class="step-label">SUBMITTED</div>
+            </div>
+            <div class="step" th:classappend="${status == 'UNDER_REVIEW' ? 'active' : (status == 'APPROVED' or status == 'REJECTED' or status == 'CLOSED' ? 'completed' : '')}">
+                <div class="step-circle">3</div>
+                <div class="step-label">REVIEW</div>
+            </div>
+            <div class="step" th:classappend="${status == 'APPROVED' or status == 'REJECTED' ? 'active' : (status == 'CLOSED' ? 'completed' : '')}">
+                <div class="step-circle">4</div>
+                <div class="step-label" th:text="${status == 'REJECTED' ? 'REJECTED' : 'APPROVED'}">APPROVED</div>
+            </div>
+        </div>
+        
+        <!-- Post-approval operational stages visualization -->
+        <div th:if="${status == 'APPROVED' or status == 'CLOSED'}" class="alert alert-info mt-3" style="background-color: var(--status-info-bg); border-color: var(--status-info); padding: 10px; font-size: 0.85rem;">
+            <strong>Operational Stage:</strong> AMORTIZATION &rarr; DISBURSED &rarr; REPAYMENT &rarr; (OVERDUE/PREPAYMENT) &rarr; CLOSED
+        </div>
+    </div>
+</body>
+</html>

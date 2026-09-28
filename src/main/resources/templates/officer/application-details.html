@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Application Details')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: officerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <div id="detailsLoading" class="alert alert-info">Loading application details...</div>
+                <div id="detailsError" class="alert alert-danger" style="display: none;"></div>
+
+                <div id="detailsContent" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="mb-0" id="detailAppNumber">Application Review - ...</h1>
+                        <span class="badge" id="detailStatusBadge" style="font-size: 1rem; padding: 0.5rem 1rem;">STATUS</span>
+                    </div>
+                    
+                    <div class="card mb-4" id="actionCard" style="display: none;">
+                        <h2 class="card-title">Actions</h2>
+                        <div class="d-flex" style="gap: 10px;">
+                            <button class="btn btn-primary" id="startReviewBtn" style="display: none;">Start Review</button>
+                            <button class="btn btn-success" id="approveBtn" style="display: none;">Approve Application</button>
+                            <button class="btn btn-danger" id="rejectBtn" style="display: none;">Reject Application</button>
+                        </div>
+                    </div>
+                    
+                    <div id="rejectFormContainer" class="card mb-4 border-danger" style="display: none;">
+                        <h2 class="card-title text-danger">Provide Rejection Reason</h2>
+                        <div class="form-group">
+                            <textarea id="rejectionReasonInput" class="form-control" rows="3" placeholder="Enter reason for rejection" required></textarea>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-danger" id="confirmRejectBtn">Confirm Rejection</button>
+                            <button class="btn btn-secondary" id="cancelRejectBtn">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4 border-info" id="reviewInfoCard" style="display: none;">
+                        <h2 class="card-title">Review Information</h2>
+                        <p class="mb-2"><strong>Reviewed By:</strong> <span id="detailReviewedBy"></span></p>
+                        <p class="mb-2"><strong>Reviewed At:</strong> <span id="detailReviewedAt"></span></p>
+                        <p class="mb-2" id="detailRejectionReasonContainer" style="display: none;">
+                            <strong>Rejection Reason:</strong> <span id="detailRejectionReason" class="text-danger"></span>
+                        </p>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h2 class="card-title">Request Details</h2>
+                            <p class="mb-2"><strong>Requested Amount:</strong> <span id="detailAmount"></span></p>
+                            <p class="mb-2"><strong>Tenure:</strong> <span id="detailTenure"></span> Months</p>
+                            <p class="mb-2"><strong>Loan Type:</strong> <span id="detailType"></span></p>
+                            <p class="mb-2"><strong>Purpose:</strong> <span id="detailPurpose"></span></p>
+                            <p class="mb-2"><strong>Submitted At:</strong> <span id="detailSubmittedAt"></span></p>
+                        </div>
+
+                        <div class="card" id="eligibilityCard">
+                            <h2 class="card-title">Eligibility Decision</h2>
+                            <p class="mb-2"><strong>Decision:</strong> <span id="detailDecision"></span></p>
+                            <p class="mb-2"><strong>DTI Ratio:</strong> <span id="detailDti"></span></p>
+                            <p class="mb-2"><strong>LTI Ratio:</strong> <span id="detailLti"></span></p>
+                            <p class="mb-2"><strong>Estimated EMI:</strong> <span id="detailEmi"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4 border-success" id="detailDisbursementCard" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="card-title mb-0">Loan Disbursement</h2>
+                            <button id="disburseLoanBtn" class="btn btn-success" style="display: none;">Disburse Loan</button>
+                        </div>
+                        
+                        <div id="disbursementLoading" class="alert alert-info" style="display: none;">Loading disbursement details...</div>
+                        <div id="disbursementError" class="alert alert-danger" style="display: none;"></div>
+                        <div id="disbursementEmpty" class="alert alert-secondary" style="display: none;">Loan has not been disbursed yet.</div>
+                        
+                        <div id="disbursementContent" style="display: none;">
+                            <p class="mb-2"><strong>Status:</strong> <span id="disbStatus" class="badge badge-success"></span></p>
+                            <p class="mb-2"><strong>Reference:</strong> <span id="disbReference"></span></p>
+                            <p class="mb-2"><strong>Disbursed Amount:</strong> <span id="disbAmount"></span></p>
+                            <p class="mb-2"><strong>Disbursed At:</strong> <span id="disbAt"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4 border-info" id="detailRepaymentCard" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="card-title mb-0">Repayment Ledger</h2>
+                            <button id="recordRepaymentBtn" class="btn btn-info" style="display: none;" data-toggle="modal" data-target="#repaymentModal">Record Repayment</button>
+                        </div>
+                        
+                        <div id="repaymentLoading" class="alert alert-info" style="display: none;">Loading repayment information...</div>
+                        <div id="repaymentError" class="alert alert-danger" style="display: none;"></div>
+                        
+                        <div id="repaymentContent" style="display: none;">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded text-center">
+                                        <h5 class="text-muted mb-1">Total Outstanding</h5>
+                                        <h3 class="mb-0 text-primary" id="repOutstanding"></h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded text-center">
+                                        <h5 class="text-muted mb-1">Total Paid</h5>
+                                        <h3 class="mb-0 text-success" id="repPaid"></h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded text-center">
+                                        <h5 class="text-muted mb-1">Total Payable</h5>
+                                        <h3 class="mb-0" id="repPayable"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <p class="mb-1"><strong>Installments:</strong> <span id="repInstallmentsText"></span></p>
+                                    <p class="mb-1" id="repPenaltiesBox" style="display:none;"><strong>Total Penalties:</strong> <span id="repPenalties" class="text-danger"></span></p>
+                                </div>
+                            </div>
+
+                            <h4 class="mb-3">Repayment History</h4>
+                            <div id="repaymentHistoryEmpty" class="alert alert-secondary" style="display: none;">No repayments recorded yet.</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="repaymentHistoryTable" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Reference</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Allocations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="repaymentHistoryBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4 border-danger" id="detailOverdueCard" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="card-title text-danger mb-0">Overdue & Penalties</h2>
+                        </div>
+                        <div id="overdueLoading" class="alert alert-info" style="display: none;">Loading overdue information...</div>
+                        <div id="overdueError" class="alert alert-danger" style="display: none;"></div>
+                        <div id="overdueEmpty" class="alert alert-secondary" style="display: none;">No overdue installments.</div>
+                        
+                        <div class="table-responsive" id="overdueContent" style="display: none;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Installment #</th>
+                                        <th>Due Date</th>
+                                        <th>Days Overdue</th>
+                                        <th>Outstanding Principal</th>
+                                        <th>Penalty Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="overdueBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Settlement / Prepayment -->
+                    <div class="card mt-4 border-info" id="detailSettlementCard" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="card-title text-info mb-0">Early Settlement / Prepayment</h2>
+                        </div>
+                        <div id="settlementLoading" class="alert alert-info" style="display: none;">Loading settlement quote...</div>
+                        <div id="settlementError" class="alert alert-danger" style="display: none;"></div>
+                        <div id="settlementEmpty" class="alert alert-secondary" style="display: none;">Settlement quote is not available for this loan status.</div>
+                        
+                        <div class="table-responsive mb-4" id="settlementContent" style="display: none;">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Outstanding Principal</th>
+                                        <td id="sqPrincipal"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Outstanding Interest</th>
+                                        <td id="sqInterest"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Active Penalties</th>
+                                        <td id="sqPenalties"></td>
+                                    </tr>
+                                    <tr class="table-info">
+                                        <th><strong>Total Settlement Amount</strong></th>
+                                        <td id="sqTotal" class="font-weight-bold"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Quote Generated At</th>
+                                        <td id="sqCalculatedAt" class="text-muted small"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Record Prepayment Form -->
+                        <div id="recordPrepaymentSection" style="display: none;">
+                            <h3 class="h5 mb-3">Record Prepayment</h3>
+                            <div id="prepaymentAlert" class="alert" style="display:none;"></div>
+                            <form id="recordPrepaymentForm" onsubmit="event.preventDefault(); submitPrepayment();">
+                                <input type="hidden" id="prepaymentApplicationId">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="prepaymentType" class="form-label">Prepayment Type</label>
+                                        <select class="form-select" id="prepaymentType" required>
+                                            <option value="PARTIAL">PARTIAL</option>
+                                            <option value="FULL">FULL (FORECLOSURE)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="prepaymentAmount" class="form-label">Amount (₹)</label>
+                                        <input type="number" class="form-control" id="prepaymentAmount" step="0.01" min="1.00" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-info w-100" id="submitPrepaymentBtn">Submit Prepayment</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="repaymentModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Record Repayment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="repaymentFormError" class="alert alert-danger" style="display: none;"></div>
+                        <form id="repaymentForm">
+                            <div class="form-group">
+                                <label for="repaymentAmount">Payment Amount (₹)</label>
+                                <input type="number" step="0.01" min="0.01" class="form-control" id="repaymentAmount" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="submitRepaymentBtn">Submit Payment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/officer.js}"></script>
+</body>
+</html>

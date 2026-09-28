@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Officer Dashboard')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: officerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <h1 class="mb-4">Officer Dashboard</h1>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <span class="stat-title">Pending Applications</span>
+                        <span class="stat-value text-info" id="dashPendingCount">-</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-title">Under Review</span>
+                        <span class="stat-value text-warning" id="dashReviewCount">-</span>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="card-title mb-0">Applications Queue</h2>
+                        <a th:href="@{/officer/applications}" class="btn btn-secondary">View All</a>
+                    </div>
+                    
+                    <div id="queueLoading" class="alert alert-info">Loading applications...</div>
+                    <div id="queueError" class="alert alert-danger" style="display: none;"></div>
+                    
+                    <div id="queueEmptyState" class="card text-center py-5 border-0" style="display: none;">
+                        <p class="mb-0 text-muted">No applications currently in queue.</p>
+                    </div>
+                    
+                    <div class="table-responsive" id="queueCard" style="display: none;">
+                        <table class="table" id="queueTable">
+                            <thead>
+                                <tr>
+                                    <th>App #</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="queueTableBody">
+                                <!-- Dynamic Content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/officer.js}"></script>
+</body>
+</html>

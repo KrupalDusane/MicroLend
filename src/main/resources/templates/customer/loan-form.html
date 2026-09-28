@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Apply for Loan')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: customerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <h1 class="mb-4">Apply for Loan</h1>
+                
+                <div id="loanFormLoading" class="alert alert-info" style="display: none;">Loading application...</div>
+                <div id="loanFormError" class="alert alert-danger" style="display: none;"></div>
+                
+                <div class="card" style="max-width: 600px;" id="loanFormCard">
+                    <form id="applyLoanForm">
+                        <div class="form-group">
+                            <label class="form-label" for="loanType">Loan Type</label>
+                            <select id="loanType" class="form-control" required>
+                                <option value="PERSONAL">Personal Loan</option>
+                                <option value="BUSINESS">Business Loan</option>
+                                <option value="EMERGENCY">Emergency Loan</option>
+                                <option value="EDUCATION">Education Loan</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="amount">Requested Amount (₹)</label>
+                            <input type="number" id="amount" class="form-control" placeholder="e.g. 50000" min="0.01" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="tenure">Tenure (Months)</label>
+                            <input type="number" id="tenure" class="form-control" placeholder="e.g. 12" min="6" max="60" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="purpose">Purpose</label>
+                            <textarea id="purpose" class="form-control" rows="3" placeholder="Explain why you need this loan" maxlength="1000" required></textarea>
+                        </div>
+
+                        <div class="alert alert-info mt-3" style="background-color: var(--status-info-bg); color: var(--status-info); border-color: #bfdbfe; font-size: 0.875rem;">
+                            DRAFT will be created. You can submit it later. By submitting eventually, you consent to an automated eligibility evaluation.
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary mt-3" id="saveLoanBtn">Save Application</button>
+                        <button type="button" class="btn btn-secondary mt-3 ms-2" id="cancelLoanBtn" style="display: none;">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/customer.js}"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Customer Sidebar -->
+    <div th:fragment="customerSidebar" class="sidebar">
+        <div class="sidebar-header">
+            MicroLend
+        </div>
+        <ul class="sidebar-nav">
+            <li><a th:href="@{/customer/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/customer/profile}">Profile</a></li>
+            <li><a th:href="@{/customer/loans}">My Loans</a></li>
+            <li><a th:href="@{/customer/loans/new}">Apply for Loan</a></li>
+            <li>
+                <a th:href="@{/customer/notifications}">
+                    Notifications <span id="customerUnreadBadge" class="badge badge-error" style="display:none;"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Officer Sidebar -->
+    <div th:fragment="officerSidebar" class="sidebar">
+        <div class="sidebar-header">
+            MicroLend Officer
+        </div>
+        <ul class="sidebar-nav">
+            <li><a th:href="@{/officer/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/officer/applications}">Applications</a></li>
+            <li><a th:href="@{/officer/overdue}">Overdue</a></li>
+            <li>
+                <a th:href="@{/officer/notifications}">
+                    Notifications <span id="officerUnreadBadge" class="badge badge-error" style="display:none;"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

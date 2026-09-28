@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="navbar" class="topbar">
+        <div class="user-profile">
+            <span id="navUserName" class="badge badge-info">Profile</span>
+            <button onclick="logout()" class="btn btn-secondary" style="margin-left: 10px;">Logout</button>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const user = getAuthUser();
+                if (user && user.name) {
+                    document.getElementById('navUserName').textContent = user.name + ' (' + user.role + ')';
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

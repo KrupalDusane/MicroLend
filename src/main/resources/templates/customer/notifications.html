@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Notifications')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: customerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <h1 class="mb-4">Notifications</h1>
+                
+                <div class="card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="card-title mb-0">Recent Notifications</h2>
+                        <button id="markAllReadBtn" class="btn btn-secondary" onclick="markAllNotificationsRead('notificationsContainer')">Mark All as Read</button>
+                    </div>
+                    
+                    <div id="notificationsContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotifications('notificationsContainer');
+        });
+    </script>
+</body>
+</html>

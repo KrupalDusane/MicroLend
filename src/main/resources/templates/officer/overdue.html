@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Overdue Management')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: officerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="mb-0">Overdue Installments</h1>
+                    <button id="processOverdueBtn" class="btn btn-primary" onclick="processGlobalOverdue()">Run Overdue Check</button>
+                </div>
+                
+                <div id="globalOverdueProcessAlert" class="alert" style="display:none;"></div>
+                
+                <div class="card">
+                    <div id="globalOverdueLoading" class="alert alert-info m-3" style="display: none;">Loading global overdue information...</div>
+                    <div id="globalOverdueEmpty" class="alert alert-secondary m-3" style="display: none;">No overdue installments found across active loans.</div>
+                    
+                    <div class="table-responsive" id="globalOverdueContent" style="display: none;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Loan ID</th>
+                                    <th>Installment #</th>
+                                    <th>Due Date</th>
+                                    <th>Days Overdue</th>
+                                    <th>Outstanding Principal</th>
+                                    <th>Penalty Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="globalOverdueBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/common.js}"></script>
+    <script th:src="@{/js/officer.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!requireRole('LOAN_OFFICER')) return;
+            loadGlobalOverdue();
+        });
+    </script>
+</body>
+</html>

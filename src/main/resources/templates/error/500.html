@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Server Error')}"></head>
+<body>
+    <div class="app-container" style="justify-content: center; align-items: center; flex-direction: column;">
+        <h1 style="font-size: 4rem; color: var(--status-error);">500</h1>
+        <h2 class="mb-3">Internal Server Error</h2>
+        <p class="mb-4">Oops, something went wrong on our end. Please try again later.</p>
+        <a th:href="@{/login}" class="btn btn-primary">Return to Login</a>
+    </div>
+</body>
+</html>

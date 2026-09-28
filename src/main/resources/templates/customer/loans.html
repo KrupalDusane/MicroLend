@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Loans')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: customerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="mb-0">My Loans</h1>
+                    <a th:href="@{/customer/loans/new}" class="btn btn-primary">+ Apply for Loan</a>
+                </div>
+                
+                <div id="loansLoading" class="alert alert-info">Loading loans...</div>
+                <div id="loansError" class="alert alert-danger" style="display: none;"></div>
+                
+                <div id="loansEmptyState" class="card text-center py-5" style="display: none;">
+                    <p class="mb-3 text-muted">No loan applications yet.</p>
+                    <a th:href="@{/customer/loans/new}" class="btn btn-primary">Apply for a Loan</a>
+                </div>
+
+                <div class="card" id="loansCard" style="display: none;">
+                    <div class="table-responsive">
+                        <table class="table" id="loansTable">
+                            <thead>
+                                <tr>
+                                    <th>Loan Number</th>
+                                    <th>Type</th>
+                                    <th>Requested Amount</th>
+                                    <th>Tenure</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loansTableBody">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/customer.js}"></script>
+</body>
+</html>

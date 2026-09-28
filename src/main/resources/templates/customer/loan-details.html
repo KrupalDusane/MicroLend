@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Loan Details')}"></head>
+<body>
+    <div class="app-container">
+        <div th:replace="~{fragments/sidebar :: customerSidebar}"></div>
+        <div class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar}"></div>
+            <div class="content-wrapper">
+                <div id="loanDetailsLoading" class="alert alert-info">Loading loan details...</div>
+                <div id="loanDetailsError" class="alert alert-danger" style="display: none;"></div>
+
+                <div id="loanDetailsContent" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="mb-0" id="detailLoanNumber">Loan Details - ...</h1>
+                        <div>
+                            <span class="badge" id="detailStatusBadge" style="font-size: 1rem; padding: 0.5rem 1rem;">STATUS</span>
+                        </div>
+                    </div>
+                    
+                    <div id="draftActions" class="mb-4" style="display: none;">
+                        <button class="btn btn-primary me-2" id="submitApplicationBtn">Submit Application</button>
+                        <a href="#" class="btn btn-secondary me-2" id="editApplicationBtn">Edit</a>
+                        <button class="btn btn-danger" id="deleteApplicationBtn">Delete Draft</button>
+                    </div>
+                    
+                    <div id="submittedActions" class="mb-4" style="display: none;">
+                        <button class="btn btn-primary" id="evaluateEligibilityBtn">Evaluate Eligibility</button>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h2 class="card-title">Overview</h2>
+                            <p class="mb-2"><strong>Requested Amount:</strong> <span id="detailAmount"></span></p>
+                            <p class="mb-2"><strong>Tenure:</strong> <span id="detailTenure"></span> Months</p>
+                            <p class="mb-2"><strong>Loan Type:</strong> <span id="detailType"></span></p>
+                            <p class="mb-2"><strong>Purpose:</strong> <span id="detailPurpose"></span></p>
+                            <p class="mb-2"><strong>Created:</strong> <span id="detailCreated"></span></p>
+                            <p class="mb-2"><strong>Submitted:</strong> <span id="detailSubmitted"></span></p>
+                        </div>
+                        
+                        <div class="card" id="detailEligibilityCard" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2 class="card-title mb-0">Eligibility Decision</h2>
+                                <span id="detailDecisionBadge" class="badge" style="display: none;"></span>
+                            </div>
+                            
+                            <div id="eligibilityLoading" class="alert alert-info" style="display: none;">Loading eligibility information...</div>
+                            <div id="eligibilityError" class="alert alert-danger" style="display: none;"></div>
+                            <div id="eligibilityEmpty" class="alert alert-secondary" style="display: none;">Eligibility has not been evaluated yet.</div>
+                            
+                            <div id="eligibilityContent" style="display: none;">
+                                <p class="mb-2"><strong>Evaluated At:</strong> <span id="detailEvaluatedAt"></span></p>
+                                <p class="mb-2"><strong>DTI Ratio:</strong> <span id="detailDti"></span></p>
+                                <p class="mb-2"><strong>LTI Ratio:</strong> <span id="detailLti"></span></p>
+                                <p class="mb-2"><strong>Estimated EMI:</strong> <span id="detailEmi"></span></p>
+                                
+                                <h3 class="h6 mt-3 mb-2">Reasons</h3>
+                                <ul id="detailReasonsList" class="ps-3 mb-0"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4 border-success" id="detailDisbursementCard" style="display: none;">
+                        <h2 class="card-title">Loan Disbursement</h2>
+                        
+                        <div id="disbursementLoading" class="alert alert-info" style="display: none;">Loading disbursement details...</div>
+                        <div id="disbursementError" class="alert alert-danger" style="display: none;"></div>
+                        <div id="disbursementEmpty" class="alert alert-secondary" style="display: none;">Loan has not been disbursed yet.</div>
+                        
+                        <div id="disbursementContent" style="display: none;">
+                            <p class="mb-2"><strong>Status:</strong> <span id="disbStatus" class="badge badge-success"></span></p>
+                            <p class="mb-2"><strong>Reference:</strong> <span id="disbReference"></span></p>
+                            <p class="mb-2"><strong>Disbursed Amount:</strong> <span id="disbAmount"></span></p>
+                            <p class="mb-2"><strong>Disbursed At:</strong> <span id="disbAt"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4 border-info" id="detailRepaymentCard" style="display: none;">
+                        <h2 class="card-title">Repayment Ledger</h2>
+                        
+                        <div id="repaymentLoading" class="alert alert-info" style="display: none;">Loading repayment information...</div>
+                        <div id="repaymentError" class="alert alert-danger" style="display: none;"></div>
+                        
+                        <div id="repaymentContent" style="display: none;">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded text-center">
+                                        <h5 class="text-muted mb-1">Total Outstanding</h5>
+                                        <h3 class="mb-0 text-primary" id="repOutstanding"></h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded text-center">
+                                        <h5 class="text-muted mb-1">Total Paid</h5>
+                                        <h3 class="mb-0 text-success" id="repPaid"></h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded text-center">
+                                        <h5 class="text-muted mb-1">Total Payable</h5>
+                                        <h3 class="mb-0" id="repPayable"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <p class="mb-1"><strong>Installments:</strong> <span id="repInstallmentsText"></span></p>
+                                    <p class="mb-1" id="repPenaltiesBox" style="display:none;"><strong>Total Penalties:</strong> <span id="repPenalties" class="text-danger"></span></p>
+                                </div>
+                            </div>
+
+                            <h4 class="mb-3">Repayment History</h4>
+                            <div id="repaymentHistoryEmpty" class="alert alert-secondary" style="display: none;">No repayments recorded yet.</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="repaymentHistoryTable" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Reference</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Allocations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="repaymentHistoryBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4 border-danger" id="detailOverdueCard" style="display: none;">
+                        <h2 class="card-title text-danger">Overdue & Penalties</h2>
+                        <div id="overdueLoading" class="alert alert-info" style="display: none;">Loading overdue information...</div>
+                        <div id="overdueError" class="alert alert-danger" style="display: none;"></div>
+                        <div id="overdueEmpty" class="alert alert-secondary" style="display: none;">No overdue installments.</div>
+                        
+                        <div class="table-responsive" id="overdueContent" style="display: none;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Installment #</th>
+                                        <th>Due Date</th>
+                                        <th>Days Overdue</th>
+                                        <th>Outstanding Principal</th>
+                                        <th>Penalty Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="overdueBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Settlement / Prepayment Quote -->
+                    <div class="card mt-4 border-primary" id="detailSettlementCard" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="card-title text-primary mb-0">Early Settlement Quote</h2>
+                        </div>
+                        <div id="settlementLoading" class="alert alert-info" style="display: none;">Loading settlement quote...</div>
+                        <div id="settlementError" class="alert alert-danger" style="display: none;"></div>
+                        <div id="settlementEmpty" class="alert alert-secondary" style="display: none;">Settlement quote is not available for this loan status.</div>
+                        
+                        <div class="table-responsive" id="settlementContent" style="display: none;">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Outstanding Principal</th>
+                                        <td id="sqPrincipal"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Outstanding Interest</th>
+                                        <td id="sqInterest"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Active Penalties</th>
+                                        <td id="sqPenalties"></td>
+                                    </tr>
+                                    <tr class="table-primary">
+                                        <th><strong>Total Settlement Amount</strong></th>
+                                        <td id="sqTotal" class="font-weight-bold"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Quote Generated At</th>
+                                        <td id="sqCalculatedAt" class="text-muted small"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4" id="detailAmortizationCard" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="card-title mb-0">Amortization Schedule</h2>
+                            <button id="generateAmortizationBtn" class="btn btn-primary" style="display: none;">Generate Schedule</button>
+                        </div>
+                        
+                        <div id="amortizationLoading" class="alert alert-info" style="display: none;">Loading amortization schedule...</div>
+                        <div id="amortizationError" class="alert alert-danger" style="display: none;"></div>
+                        <div id="amortizationEmpty" class="alert alert-secondary" style="display: none;">No amortization schedule has been generated yet.</div>
+                        
+                        <div id="amortizationContent" style="display: none;">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Principal:</strong> <span id="amortPrincipal"></span></p>
+                                    <p class="mb-2"><strong>Annual Interest Rate:</strong> <span id="amortRate"></span></p>
+                                    <p class="mb-2"><strong>Monthly EMI:</strong> <span id="amortEmi"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Number of Installments:</strong> <span id="amortCount"></span></p>
+                                    <p class="mb-2"><strong>Total Interest:</strong> <span id="amortTotalInterest"></span></p>
+                                    <p class="mb-2"><strong>Total Payable:</strong> <span id="amortTotalPayable"></span></p>
+                                </div>
+                            </div>
+                            
+                            <h3 class="h5 mb-3">Installments</h3>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" style="font-size: 0.9rem;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Due Date</th>
+                                            <th>Opening Bal.</th>
+                                            <th>EMI</th>
+                                            <th>Principal</th>
+                                            <th>Interest</th>
+                                            <th>Closing Bal.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="amortizationTableBody">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/customer.js}"></script>
+</body>
+</html>

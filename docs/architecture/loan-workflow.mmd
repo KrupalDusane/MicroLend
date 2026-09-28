@@ -1,0 +1,22 @@
+stateDiagram-v2
+    [*] --> DRAFT : Customer Creates Loan
+    DRAFT --> SUBMITTED : Customer Submits Application
+    
+    state SUBMITTED {
+        [*] --> EVALUATION_PENDING
+        EVALUATION_PENDING --> ELIGIBLE : Customer Clicks 'Evaluate'
+        EVALUATION_PENDING --> NOT_ELIGIBLE : Customer Clicks 'Evaluate'
+    }
+    
+    SUBMITTED --> UNDER_REVIEW : Officer Starts Review
+    
+    state UNDER_REVIEW {
+        [*] --> OFFICER_REVIEWING
+    }
+    
+    UNDER_REVIEW --> APPROVED : Officer Approves (Requires ELIGIBLE)
+    UNDER_REVIEW --> REJECTED : Officer Rejects (or NOT_ELIGIBLE)
+    
+    APPROVED --> CLOSED : Fully Repaid / Settled
+    REJECTED --> [*]
+    CLOSED --> [*]

@@ -1,0 +1,53 @@
+erDiagram
+    users {
+        bigint id PK
+        varchar email
+        varchar password_hash
+        varchar name
+        varchar role "CUSTOMER, LOAN_OFFICER, ADMIN"
+    }
+    
+    customers {
+        bigint id PK
+        bigint user_id FK
+        varchar full_name
+        varchar phone_number
+        varchar employment_type
+        decimal monthly_income
+        decimal existing_monthly_obligations
+    }
+    
+    loan_applications {
+        bigint id PK
+        varchar application_number
+        bigint customer_id FK
+        decimal requested_amount
+        int tenure_months
+        varchar purpose
+        varchar status "DRAFT, SUBMITTED, UNDER_REVIEW, APPROVED, REJECTED, CLOSED"
+        bigint reviewed_by_id FK
+    }
+    
+    eligibility_evaluations {
+        bigint id PK
+        bigint loan_application_id FK
+        varchar decision "ELIGIBLE, NOT_ELIGIBLE"
+        decimal debt_to_income_ratio
+        decimal loan_to_income_ratio
+        decimal estimated_emi
+    }
+    
+    notifications {
+        bigint id PK
+        bigint user_id FK
+        varchar title
+        varchar message
+        varchar notification_type
+        boolean is_read
+    }
+    
+    users ||--o| customers : "has profile"
+    customers ||--o{ loan_applications : "submits"
+    loan_applications ||--o| eligibility_evaluations : "has"
+    users ||--o{ loan_applications : "reviews (officer)"
+    users ||--o{ notifications : "receives"

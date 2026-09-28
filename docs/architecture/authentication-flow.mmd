@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant User
+    participant LoginAPI as /api/auth/login
+    participant AuthService
+    participant SpringSecurity as AuthenticationManager
+    participant JwtService
+    
+    User->>LoginAPI: POST {email, password}
+    LoginAPI->>AuthService: authenticate()
+    AuthService->>SpringSecurity: authenticate(email, password)
+    SpringSecurity->>SpringSecurity: Verify BCrypt Password
+    SpringSecurity-->>AuthService: Authentication Success
+    AuthService->>JwtService: generateToken(User)
+    JwtService-->>AuthService: JWT String
+    AuthService-->>LoginAPI: Token & User Details
+    LoginAPI-->>User: HTTP 200 OK (JWT)
+    
+    Note over User,SpringSecurity: Subsequent Requests
+    User->>SpringSecurity: GET /api/customers/me (Header: Bearer JWT)
+    SpringSecurity->>JwtService: extractUsername & validateToken
+    JwtService-->>SpringSecurity: Valid
+    SpringSecurity->>SpringSecurity: Set SecurityContextHolder
+    SpringSecurity->>LoginAPI: Forward to Controller
