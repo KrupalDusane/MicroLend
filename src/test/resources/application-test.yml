@@ -13,7 +13,7 @@ spring:
     show-sql: true
 
 jwt:
-  secret: test-only-secret-for-microlend-tests
+  secret: bWljcm9sZW5kLXRlc3Qtc2VjcmV0LWZvci1sb2NhbC10ZXN0cw==
   expiration: 86400000
 
 server:
